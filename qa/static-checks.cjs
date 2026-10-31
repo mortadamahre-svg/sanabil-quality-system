@@ -35,24 +35,24 @@ if (appFiles.every(file => fs.existsSync(path.join(root, file)))) {
 
   const sentryInit = fs.readFileSync(path.join(root, 'sentry-init.js'), 'utf8');
   const checks = [
-    ['Arabic RTL document', /<html\\b[^>]*\\bdir=["']rtl["']/i, html],
+    ['Arabic RTL document', /<html\b[^>]*\bdir=["']rtl["']/i, html],
     ['Families screen', /id=["']p-fam["']/, html],
     ['Distribution screen', /id=["']p-dist["']/, html],
     ['Statistics screen', /id=["']p-stats["']/, html],
     ['Settings screen', /id=["']p-set["']/, html],
     ['Local database key', /sanabil_db/, appJs],
-    ['9 kg/person quota', /members\\s*\\*\\s*9/, appJs],
-    ['250 IQD/person payment', /members\\s*\\*\\s*250/, appJs],
-    ['50 kg bag calculation', /Math\\.floor\\s*\\([^)]*\\/\\s*50\\s*\\)/, appJs],
-    ['Service worker registration', /serviceWorker['"]?\\s*\\)?\\.register|serviceWorker\\.register/, html],
-    ['Service worker install handler', /addEventListener\\(['"]install['"]/, sw],
-    ['Service worker fetch handler', /addEventListener\\(['"]fetch['"]/, sw],
-    ['External messaging excluded from cache', /telegram|script\\.google/i, sw],
-    ['Provided Sentry Loader script is present', /https:\\/\\/js\\.sentry-cdn\\.com\\/04840aef61b2c3c27289909e1d91fd38\\.min\\.js/, html],
-    ['Sentry initialization runs before the Loader', /sentry-init\\.js[\\s\\S]*?js\\.sentry-cdn\\.com/, html],
-    ['Sentry PII collection disabled', /sendDefaultPii\\s*:\\s*false/, sentryInit],
-    ['Sentry events scrubbed before sending', /beforeSend\\s*:\\s*safeEvent/, sentryInit],
-    ['Sentry replay and tracing disabled', /tracesSampleRate\\s*:\\s*0[\\s\\S]*?replaysSessionSampleRate\\s*:\\s*0[\\s\\S]*?replaysOnErrorSampleRate\\s*:\\s*0/, sentryInit]
+    ['9 kg/person quota', /members\s*\*\s*9/, appJs],
+    ['250 IQD/person payment', /members\s*\*\s*250/, appJs],
+    ['50 kg bag calculation', /Math\.floor\s*\([^)]*\/\s*50\s*\)/, appJs],
+    ['Service worker registration', /serviceWorker['"]?\s*\)?\.register|serviceWorker\.register/, html],
+    ['Service worker install handler', /addEventListener\(['"]install['"]/, sw],
+    ['Service worker fetch handler', /addEventListener\(['"]fetch['"]/, sw],
+    ['External messaging excluded from cache', /telegram|script\.google/i, sw],
+    ['Provided Sentry Loader script is present', /https:\/\/js\.sentry-cdn\.com\/04840aef61b2c3c27289909e1d91fd38\.min\.js/, html],
+    ['Sentry initialization runs before the Loader', /sentry-init\.js[\s\S]*?js\.sentry-cdn\.com/, html],
+    ['Sentry PII collection disabled', /sendDefaultPii\s*:\s*false/, sentryInit],
+    ['Sentry events scrubbed before sending', /beforeSend\s*:\s*safeEvent/, sentryInit],
+    ['Sentry replay and tracing disabled', /tracesSampleRate\s*:\s*0[\s\S]*?replaysSessionSampleRate\s*:\s*0[\s\S]*?replaysOnErrorSampleRate\s*:\s*0/, sentryInit]
   ];
   for (const [label, pattern, source] of checks) {
     if (pattern.test(source)) pass(label);
