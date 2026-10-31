@@ -1,0 +1,12 @@
+{
+  "name": "sanabil-quality-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automated quality assurance checks for Sanabil Flour Distribution Manager",
+  "scripts": {
+    "test": "node --test",
+    "qa:static": "node qa/static-checks.cjs",
+    "qa": "npm run qa:static && npm test"
+  },
+  "engines": { "node": ">=20" }
+}
