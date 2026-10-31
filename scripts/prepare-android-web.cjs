@@ -20,7 +20,7 @@ for (const file of files) {
 const src = path.join(root, 'src');
 if (fs.existsSync(src)) fs.cpSync(src, path.join(out, 'src'), { recursive: true });
 const html = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
-if (!/<html\\b[^>]*\\blang=["']ar["'][^>]*\\bdir=["']rtl["']/i.test(html)) {
+if (!html.includes('<html lang="ar" dir="rtl"')) {
   throw new Error('Android bundle must remain Arabic RTL');
 }
 for (const file of ['index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png']) {
