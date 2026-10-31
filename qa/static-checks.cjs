@@ -10,7 +10,7 @@ const pass = message => console.log('PASS:', message);
 
 const appFiles = [
   'index.html', 'src/app.js', 'src/style.css', 'sw.js',
-  'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon.svg'
+  'manifest.webmanifest', 'sentry-config.js', 'sentry-init.js', 'icon-192.png', 'icon-512.png', 'icon.svg'
 ];
 for (const file of appFiles) {
   if (fs.existsSync(path.join(root, file))) pass('Found ' + file);
@@ -47,6 +47,10 @@ if (appFiles.every(file => fs.existsSync(path.join(root, file)))) {
     ['Service worker install handler', /addEventListener\(['"]install['"]/, sw],
     ['Service worker fetch handler', /addEventListener\(['"]fetch['"]/, sw],
     ['External messaging excluded from cache', /telegram|script\.google/i, sw]
+    ['Sentry browser SDK loaded before application code', /browser\\.sentry-cdn\\.com\\/11\\.0\\.0\\/bundle\\.min\\.js[\\s\\S]*?sentry-init\\.js[\\s\\S]*?<script>/i, html],
+    ['Sentry PII collection disabled', /sendDefaultPii\\s*:\\s*false/, fs.readFileSync(path.join(root, 'sentry-init.js'), 'utf8')],
+    ['Sentry events scrubbed before sending', /beforeSend\\s*:\\s*safeEvent/, fs.readFileSync(path.join(root, 'sentry-init.js'), 'utf8')],
+    ['Sentry replay and tracing disabled', /tracesSampleRate\\s*:\\s*0[\\s\\S]*?replaysSessionSampleRate\\s*:\\s*0[\\s\\S]*?replaysOnErrorSampleRate\\s*:\\s*0/, fs.readFileSync(path.join(root, 'sentry-init.js'), 'utf8')]
   ];
   for (const [label, pattern, source] of checks) {
     if (pattern.test(source)) pass(label);
