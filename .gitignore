@@ -1,0 +1,18 @@
+# Local citizen data and exports — never commit these
+families-backup*.json
+flour-*backup*.json
+*-full-backup*.json
+*.sqlite
+*.db
+# Local environment / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Tool output
+node_modules/
+coverage/
+playwright-report/
+test-results/
+.DS_Store
