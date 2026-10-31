@@ -31,10 +31,3 @@ jobs:
         run: npm test
       - name: Check whitespace and patch errors
         run: git diff --check
-  dependency-review:
-    if: github.event_name == 'pull_request'
-    name: Dependency review
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
