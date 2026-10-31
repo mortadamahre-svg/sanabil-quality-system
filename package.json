@@ -7,9 +7,18 @@
     "test": "node --test",
     "qa:static": "node qa/static-checks.cjs",
     "qa": "npm run qa:static && npm test",
-    "build": "node qa/build-check.cjs"
+    "build": "node qa/build-check.cjs",
+    "build:web": "node scripts/prepare-android-web.cjs",
+    "build:android": "npm run build:web && cap sync android"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/android": "^8.0.0"
   }
 }
