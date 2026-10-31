@@ -1,4 +1,4 @@
-const C='sanabil-v5',A=['./','index.html','icon.svg','manifest.webmanifest'];
+const C='sanabil-v6',A=['./','index.html','icon.svg','manifest.webmanifest','sentry-config.js','sentry-init.js'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(A)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||/telegram|script\.google/.test(u.hostname))return;
