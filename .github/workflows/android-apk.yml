@@ -15,7 +15,7 @@ jobs:
   build-apk:
     name: Build installable Android APK
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -30,6 +30,8 @@ jobs:
           java-version: '21'
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools;platforms;android-36;build-tools;36.0.0'
       - name: Install dependencies
         run: npm install
       - name: Validate web application
@@ -37,9 +39,7 @@ jobs:
       - name: Prepare Android web assets
         run: npm run build:web
       - name: Generate native Android project
-        run: npx cap add android
-      - name: Sync native project
-        run: npx cap sync android
+        run: npm run build:android
       - name: Build debug APK
         run: |
           cd android
