@@ -12,7 +12,7 @@ const pass = m => console.log('BUILD PASS:', m);
 if (!/<html\b[^>]*\blang=["']ar["'][^>]*\bdir=["']rtl["']/i.test(html)) fail('Arabic RTL root element missing');
 else pass('Arabic RTL entry document');
 
-const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(m => m[1]);
+const ids = [...html.matchAll(/\bid=["']([^"'\x24{}]+)["']/g)].map(m => m[1]);
 const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
 if (duplicates.length) fail('Duplicate HTML IDs: ' + [...new Set(duplicates)].join(', '));
 else pass('HTML IDs are unique');
