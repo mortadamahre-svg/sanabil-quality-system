@@ -39,6 +39,8 @@ jobs:
       - name: Prepare Android web assets
         run: npm run build:web
       - name: Generate native Android project
+        run: npx cap add android
+      - name: Sync Android project
         run: npm run build:android
       - name: Build debug APK
         run: |
