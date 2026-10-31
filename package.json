@@ -6,7 +6,10 @@
   "scripts": {
     "test": "node --test",
     "qa:static": "node qa/static-checks.cjs",
-    "qa": "npm run qa:static && npm test"
+    "qa": "npm run qa:static && npm test",
+    "build": "node qa/build-check.cjs"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
