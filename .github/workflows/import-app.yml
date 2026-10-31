@@ -1,0 +1,46 @@
+name: Import Sanabil app archive
+on:
+  push:
+    paths:
+      - 'sanabil-app_3.zip'
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate and extract app source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f sanabil-app_3.zip
+          mkdir -p /tmp/sanabil-import
+          unzip -q sanabil-app_3.zip -d /tmp/sanabil-import
+          test -s /tmp/sanabil-import/index.html
+          test -s /tmp/sanabil-import/src/app.js
+          test -s /tmp/sanabil-import/src/style.css
+          test -s /tmp/sanabil-import/sw.js
+          test -s /tmp/sanabil-import/manifest.webmanifest
+          # Copy only application assets; preserve QA workflows and QA documentation.
+          cp /tmp/sanabil-import/index.html ./index.html
+          mkdir -p src
+          cp /tmp/sanabil-import/src/app.js ./src/app.js
+          cp /tmp/sanabil-import/src/style.css ./src/style.css
+          cp /tmp/sanabil-import/sw.js ./sw.js
+          cp /tmp/sanabil-import/manifest.webmanifest ./manifest.webmanifest
+          cp /tmp/sanabil-import/icon-192.png ./icon-192.png
+          cp /tmp/sanabil-import/icon-512.png ./icon-512.png
+          cp /tmp/sanabil-import/icon.svg ./icon.svg
+          cp /tmp/sanabil-import/.nojekyll ./.nojekyll
+      - name: Commit imported app source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html src/app.js src/style.css sw.js manifest.webmanifest icon-192.png icon-512.png icon.svg .nojekyll
+          git diff --cached --quiet || git commit -m "Import original Sanabil application source"
+          git push
