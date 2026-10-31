@@ -25,6 +25,8 @@ jobs:
         run: |
           if [ -f src/app.js ]; then node --check src/app.js; else echo "App source not uploaded yet; application syntax check skipped."; fi
           node qa/static-checks.cjs
+      - name: Validate production build and local assets
+        run: npm run build
       - name: Run regression tests
         run: npm test
       - name: Check whitespace and patch errors
