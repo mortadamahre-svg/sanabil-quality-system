@@ -22,5 +22,7 @@ jobs:
         with:
           languages: javascript
           queries: security-extended
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis (local scan; upload requires GitHub code scanning entitlement)
         uses: github/codeql-action/analyze@v3
+        with:
+          upload: false
