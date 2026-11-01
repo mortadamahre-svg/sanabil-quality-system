@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
 const el=()=>new Proxy(function(){},{get:(t,k)=>k===Symbol.toPrimitive?()=>'':k==='classList'?{add(){},remove(){},toggle(){}}:k==='style'?{setProperty(){}}:k==='dataset'?{}:k==='selectedOptions'?[{text:'',value:''}]:k==='options'?[]:el(),set:()=>true,apply:()=>el()});
 const store={};const ctx=vm.createContext({document:{querySelector:()=>el(),querySelectorAll:()=>[],documentElement:el(),createElement:()=>el(),head:el(),body:el()},localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=String(v)}},window:{},location:{hostname:''},navigator:{},addEventListener(){},setInterval(){},setTimeout(){},clearTimeout(){},scrollTo(){},console});
-const source=readFileSync('index.html','utf8').match(/<script>([\\s\\S]*?)<\\/script>/)[1];vm.runInContext(source,ctx);const run=c=>vm.runInContext(c,ctx);
+const source=readFileSync('index.html','utf8').match(/<script>([\s\S]*?)<\/script>/)[1];vm.runInContext(source,ctx);const run=c=>vm.runInContext(c,ctx);
 test('50 kg bag breakdown',()=>{assert.equal(run('taf(90)'),'1 كيس و 40 كغم');assert.equal(run('taf(36)'),'0 كيس و 36 كغم');assert.equal(run('taf(50)'),'1 كيس و 0 كغم')});
 test('distribution states',()=>{run(`DB.dist={'2026-10':{recs:{a:{bag:1},b:{bag:1,extra:1},c:{extra:1}}}}`);const s=run(`JSON.stringify([[90,'a'],[90,'b'],[36,'c'],[90,'d']].map(([f,id])=>calc({id,flour:f,amount:f*250/9},'2026-10').s))`);assert.equal(s,'["part","full","full","none"]')});
 test('amount received calculation',()=>{assert.equal(run(`calc({id:'a',flour:90,amount:2500},'2026-10').money`),1389);assert.equal(run(`calc({id:'z',flour:0,amount:0},'2026-10').money`),0)});
