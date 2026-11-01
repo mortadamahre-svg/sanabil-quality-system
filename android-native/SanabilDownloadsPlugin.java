@@ -1,6 +1,8 @@
 package com.sanabil.flourdistribution;
 
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.ActivityNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -64,6 +66,19 @@ public class SanabilDownloadsPlugin extends Plugin {
                     stream.getFD().sync();
                 }
                 savedUri = Uri.fromFile(target);
+            }
+            // Open the saved document immediately so Android shows the
+            // installed apps that can view this file (PDF, DOCX, XLSX, TXT, etc.).
+            // Keep the download even when no compatible viewer is installed.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    Intent view = new Intent(Intent.ACTION_VIEW);
+                    view.setDataAndType(savedUri, mimeType);
+                    view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    getActivity().startActivity(Intent.createChooser(view, "فتح الملف باستخدام"));
+                } catch (ActivityNotFoundException ignored) {
+                    // The file is safely saved in Downloads; the user can open it later.
+                }
             }
             JSObject result = new JSObject();
             result.put("uri", savedUri.toString());
