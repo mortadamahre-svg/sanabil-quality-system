@@ -258,9 +258,9 @@ function openPick(s){const id=s.id,yr=id==='dY'||id==='sY',mo=id==='dM'||id==='s
  ov.innerHTML=`<div class="sheet"><div class="ph"><i class="tl">${svg(IC[yr||mo?'cal':nm?'hash':'doc'])}</i><h3>${TT[id]||''}</h3></div><div class="${yr||mo?'g3':nm?'g5':'pl'}">${[...s.options].map(item).join('')}</div></div>`;
  document.body.appendChild(ov);ov.onclick=e=>{const b=e.target.closest('.po');if(b){s.selectedIndex=+b.dataset.i;s.dispatchEvent(new Event('change'));sync1(s)}if(b||e.target===ov)ov.remove()}}
 /* ---------- Sentry (error monitoring, no personal data) ---------- */
-const VER='__VERSION__',DSK='sanabil_dsn';
-function setSn(){const s=$('#snSt');if(!s)return;$('#snOrg').value=LS.getItem('sanabil_sn_org')||'';$('#snPrj').value=LS.getItem('sanabil_sn_prj')||'';const ok=!!(window.Sentry&&Sentry.getClient&&Sentry.getClient());s.textContent=ok?'مفعّل':LS.getItem(DSK)?'غير جاهز':'غير مفعّل';s.className='chip '+(ok?'ready':'bad')}
-function initSentry(){const d=LS.getItem(DSK);if(!d)return setSn();
+const VER='__VERSION__',DSK='sanabil_dsn',DEFAULT_DSN='https://04840aef61b2c3c27289909e1d91fd38@o4512352982269952.ingest.us.sentry.io/4512353074151424';
+function setSn(){const s=$('#snSt');if(!s)return;$('#snDsn').value=LS.getItem(DSK)||DEFAULT_DSN;$('#snOrg').value=LS.getItem('sanabil_sn_org')||'';$('#snPrj').value=LS.getItem('sanabil_sn_prj')||'';const ok=!!(window.Sentry&&Sentry.getClient&&Sentry.getClient());s.textContent=ok?'مفعّل':(LS.getItem(DSK)||DEFAULT_DSN)?'غير جاهز':'غير مفعّل';s.className='chip '+(ok?'ready':'bad')}
+function initSentry(){const d=LS.getItem(DSK)||DEFAULT_DSN;if(!d)return setSn();
  loadJs('https://browser.sentry-cdn.com/8.40.0/bundle.min.js').then(()=>{Sentry.init({dsn:d,release:'sanabil@'+VER,environment:location.hostname.endsWith('github.io')?'production':'development',sendDefaultPii:false,tracesSampleRate:0,
   beforeBreadcrumb:()=>null,beforeSend:e=>{e.message='Sanabil client-side error';delete e.request;delete e.user;delete e.extra;delete e.contexts;delete e.tags;delete e.breadcrumbs;delete e.transaction;if(e.exception&&Array.isArray(e.exception.values))e.exception.values=e.exception.values.map(v=>({type:'JavaScriptError',value:'Client-side exception (details redacted)',stacktrace:{frames:(v.stacktrace&&v.stacktrace.frames||[]).map(f=>({filename:f.filename,lineno:f.lineno,colno:f.colno}))}}));return e}});setSn()}).catch(setSn)}
 $('#snTest').onclick=()=>{if(!window.Sentry)return toast('Sentry غير مفعّل بعد');report(new Error('اختبار Sentry من سنابل'));toast('أُرسل خطأ تجريبي، تحقق من لوحة Sentry')};
