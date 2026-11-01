@@ -15,7 +15,18 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clea
 function modal(h){const m=$('#modal');m.innerHTML=`<div class="sheet">${h}</div>`;m.classList.add('on');m.onclick=e=>{if(e.target===m)closeM()}}
 const closeM=()=>$('#modal').classList.remove('on');
 function ask(msg,yes){modal(`<h3>${msg}</h3><div class="row"><button class="btn danger" id="y">نعم</button><button class="btn ghost" id="x">إلغاء</button></div>`);$('#y').onclick=()=>{closeM();yes()};$('#x').onclick=closeM}
-function dl(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
+async function dl(name,blob){
+ const safe=String(name||'download').replace(/[\\\\/:*?"<>|]/g,'_');
+ const native=window.Capacitor?.isNativePlatform?.()&&window.Capacitor?.Plugins?.SanabilDownloads;
+ if(native){
+  const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]||'');r.onerror=()=>reject(r.error||new Error('تعذرت قراءة الملف'));r.readAsDataURL(blob)});
+  const result=await native.save({fileName:safe,data,mimeType:blob.type||'application/octet-stream'});
+  if(!result?.id)throw new Error('لم يؤكد Android بدء التنزيل');
+  return {native:true,id:result.id};
+ }
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=safe;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ return {native:false};
+}
 const jsonBlob=o=>new Blob([JSON.stringify(o,null,2)],{type:'application/json'});
 const readFile=(inp,cb)=>{const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{cb(JSON.parse(r.result))}catch{toast('الملف غير صالح')}inp.value=''};r.readAsText(f)};
 const loadJs=u=>new Promise((ok,no)=>{if(loadJs[u])return ok();const s=document.createElement('script');s.src=u;s.onload=()=>{loadJs[u]=1;ok()};s.onerror=no;document.head.appendChild(s)});
@@ -112,8 +123,8 @@ async function make(f){const X=exInfo(),{items,title}=X;let blob;
  else{await loadJs('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js');const d=document.createElement('div');d.innerHTML=`<style>${X.css}</style>`+X.body;d.dir='rtl';d.style.cssText='font-family:Tahoma,Arial;color:#000;background:#fff;padding:10px;width:700px';blob=await html2pdf().set({margin:12,html2canvas:{scale:2},pagebreak:{mode:['css','legacy']}}).from(d).outputPdf('blob')}
  return{blob,name:`${X.name}.${f}`}}
 const run=async fn=>{toast('جارٍ تجهيز الملف…');try{await fn(await make($('#xF').value))}catch(e){if(e.name!=='AbortError')toast('تعذّر إنشاء الملف (تحقق من الاتصال)')}};
-$('#xDl').onclick=()=>run(o=>{dl(o.name,o.blob);toast('تم التنزيل ✓')});
-$('#xSh').onclick=()=>run(async o=>{const file=new File([o.blob],o.name,{type:o.blob.type});if(navigator.canShare?.({files:[file]}))await navigator.share({files:[file]});else{dl(o.name,o.blob);toast('المشاركة غير مدعومة، تم التنزيل')}});
+$('#xDl').onclick=()=>run(async o=>{const result=await dl(o.name,o.blob);toast(result.native?'بدأ تنزيل الملف — ستجده في مجلد Download ✓':'تم إرسال طلب التنزيل ✓')});
+$('#xSh').onclick=()=>run(async o=>{const file=new File([o.blob],o.name,{type:o.blob.type});if(navigator.canShare?.({files:[file]}))await navigator.share({files:[file]});else{const result=await dl(o.name,o.blob);toast(result.native?'بدأ تنزيل الملف — ستجده في مجلد Download ✓':'تم إرسال طلب التنزيل ✓')}});
 $('#xPr').onclick=()=>{const w=open('','_blank');if(!w)return toast('اسمح بالنوافذ المنبثقة');w.document.write(exInfo().html);w.document.close();setTimeout(()=>w.print(),500)};
 
 /* ---------- settings ---------- */
@@ -124,7 +135,7 @@ $('#shSave').onclick=()=>{DB.settings.sheetUrl=$('#shUrl').value.trim();save();p
 $('#shSync').onclick=async()=>{toast('جارٍ المزامنة…');await sheet({action:'syncAll',families:DB.families,dist:DB.dist});DB.settings.lastSync=Date.now();save();toast('تمت المزامنة ✓')};
 $('#shRest').onclick=()=>ask('استبدال البيانات الحالية بالمحفوظة في Google Sheets؟',async()=>{try{const u=DB.settings.sheetUrl,j=await(await fetch(u+(u.includes('?')?'&':'?')+'action=restore')).json(),d=j.data||j;if(!Array.isArray(d.families))throw 0;DB.families=d.families;if(d.dist)DB.dist=d.dist;save();toast('تمت الاستعادة ✓')}catch{toast('تعذّرت الاستعادة')}});
 $('#tgSave').onclick=()=>{const t=$('#tgTok').value.trim();if(t)LS.setItem(TK,t);if(!DB.settings.tgChat)DB.settings.tgChat='-1003999892523';save();$('#tgTok').value='';renderSet();toast('تم الحفظ ✓')};
-$('#bkFull').onclick=()=>dl(`flour-full-backup-${new Date().toISOString().slice(0,10)}.json`,jsonBlob({type:'flour-distribution-full-backup',version:2,createdAt:new Date().toISOString(),data:DB}));
+$('#bkFull').onclick=async()=>{try{const result=await dl(`flour-full-backup-${new Date().toISOString().slice(0,10)}.json`,jsonBlob({type:'flour-distribution-full-backup',version:2,createdAt:new Date().toISOString(),data:DB}));toast(result.native?'بدأ تنزيل النسخة الاحتياطية إلى Download ✓':'تم إرسال طلب تنزيل النسخة الاحتياطية ✓')}catch{toast('تعذر حفظ النسخة الاحتياطية')}};
 $('#rsFull').onclick=()=>$('#fullFile').click();
 $('#fullFile').onchange=e=>readFile(e.target,j=>{const d=j.data;if(!d||!Array.isArray(d.families))return toast('ملف غير صالح');ask('استبدال كل بيانات التطبيق بالنسخة؟',()=>{DB={families:d.families,dist:d.dist||{},queue:d.queue||[],settings:{...DB.settings,...(d.settings||{}),tgChat:d.settings?.tgChat||DB.settings.tgChat,sheetUrl:d.settings?.sheetUrl||DB.settings.sheetUrl}};save();renderSet();toast('تمت الاستعادة ✓')})});
 
