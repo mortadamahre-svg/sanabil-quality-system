@@ -21,7 +21,7 @@ async function dl(name,blob){
  if(native){
   const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]||'');r.onerror=()=>reject(r.error||new Error('تعذرت قراءة الملف'));r.readAsDataURL(blob)});
   const result=await native.save({fileName:safe,data,mimeType:blob.type||'application/octet-stream'});
-  if(!result?.id)throw new Error('لم يؤكد Android بدء التنزيل');
+  if(!result?.uri||!result?.bytesWritten)throw new Error('لم يؤكد Android حفظ الملف داخل Download');
   return {native:true,id:result.id};
  }
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=safe;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
