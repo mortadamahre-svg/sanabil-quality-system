@@ -262,7 +262,7 @@ const VER='__VERSION__',DSK='sanabil_dsn';
 function setSn(){const s=$('#snSt');if(!s)return;$('#snOrg').value=LS.getItem('sanabil_sn_org')||'';$('#snPrj').value=LS.getItem('sanabil_sn_prj')||'';const ok=!!(window.Sentry&&Sentry.getClient&&Sentry.getClient());s.textContent=ok?'مفعّل':LS.getItem(DSK)?'غير جاهز':'غير مفعّل';s.className='chip '+(ok?'ready':'bad')}
 function initSentry(){const d=LS.getItem(DSK);if(!d)return setSn();
  loadJs('https://browser.sentry-cdn.com/8.40.0/bundle.min.js').then(()=>{Sentry.init({dsn:d,release:'sanabil@'+VER,environment:location.hostname.endsWith('github.io')?'production':'development',sendDefaultPii:false,tracesSampleRate:0,
-  beforeBreadcrumb:b=>['ui.click','ui.input','console','fetch','xhr'].includes(b.category)?null:b,beforeSend:e=>{delete e.request;delete e.user;return e}});setSn()}).catch(setSn)}
+  beforeBreadcrumb:()=>null,beforeSend:e=>{e.message='Sanabil client-side error';delete e.request;delete e.user;delete e.extra;delete e.contexts;delete e.tags;delete e.breadcrumbs;delete e.transaction;if(e.exception&&Array.isArray(e.exception.values))e.exception.values=e.exception.values.map(v=>({type:'JavaScriptError',value:'Client-side exception (details redacted)',stacktrace:{frames:(v.stacktrace&&v.stacktrace.frames||[]).map(f=>({filename:f.filename,lineno:f.lineno,colno:f.colno}))}}));return e}});setSn()}).catch(setSn)}
 $('#snTest').onclick=()=>{if(!window.Sentry)return toast('Sentry غير مفعّل بعد');report(new Error('اختبار Sentry من سنابل'));toast('أُرسل خطأ تجريبي، تحقق من لوحة Sentry')};
 /* ---------- in-app error center (+ pull issues from Sentry) ---------- */
 const EK='sanabil_errlog',SK='sanabil_sn_seen';let SNI=[];
