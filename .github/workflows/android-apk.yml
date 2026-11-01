@@ -40,6 +40,7 @@ jobs:
         run: npm run build:web
       - name: Generate native Android project
         run: npx cap add android
+      # Registers the native MediaStore saver before the Android build.
       - name: Install native Android download support
         run: node scripts/install-android-downloads.cjs
       - name: Install custom Android launcher icons
