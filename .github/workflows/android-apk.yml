@@ -42,6 +42,8 @@ jobs:
         run: npx cap add android
       - name: Install custom Android launcher icons
         run: node scripts/install-android-icons.cjs
+      - name: Install native Android Downloads plugin
+        run: node scripts/install-android-downloads.cjs
       - name: Sync Android project
         run: npm run build:android
       - name: Build debug APK
