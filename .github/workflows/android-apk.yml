@@ -40,6 +40,8 @@ jobs:
         run: npm run build:web
       - name: Generate native Android project
         run: npx cap add android
+      - name: Install custom Android launcher icons
+        run: node scripts/install-android-icons.cjs
       - name: Sync Android project
         run: npm run build:android
       - name: Build debug APK
