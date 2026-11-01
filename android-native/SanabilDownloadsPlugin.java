@@ -1,9 +1,10 @@
 package com.sanabil.flourdistribution;
 
-import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.webkit.MimeTypeMap;
+import android.provider.MediaStore;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -11,6 +12,7 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 import android.util.Base64;
 
@@ -18,47 +20,62 @@ import android.util.Base64;
 public class SanabilDownloadsPlugin extends Plugin {
     @PluginMethod
     public void save(PluginCall call) {
-        String fileName = call.getString("fileName");
+        String requestedName = call.getString("fileName");
         String encoded = call.getString("data");
         String mimeType = call.getString("mimeType", "application/octet-stream");
-        if (fileName == null || encoded == null || encoded.isEmpty()) {
+        if (requestedName == null || encoded == null || encoded.isEmpty()) {
             call.reject("Missing file name or file data");
             return;
         }
-        fileName = new File(fileName).getName().replaceAll("[^A-Za-z0-9._\\-\\u0600-\\u06FF]", "_");
+        String fileName = new File(requestedName).getName().replaceAll("[^A-Za-z0-9._\\-\\u0600-\\u06FF]", "_");
         if (fileName.isEmpty() || fileName.equals(".") || fileName.equals("..")) {
             call.reject("Invalid file name");
             return;
         }
-        File temp = null;
+        Uri savedUri = null;
         try {
             byte[] bytes = Base64.decode(encoded, Base64.DEFAULT);
             if (bytes.length == 0) throw new IllegalArgumentException("Empty file");
-            temp = new File(getContext().getCacheDir(), "sanabil-" + System.currentTimeMillis() + "-" + fileName);
-            try (FileOutputStream out = new FileOutputStream(temp)) {
-                out.write(bytes);
-                out.flush();
-                out.getFD().sync();
+            OutputStream output;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE, mimeType);
+                values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+                values.put(MediaStore.Downloads.IS_PENDING, 1);
+                savedUri = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                if (savedUri == null) throw new IllegalStateException("Android could not create a Downloads entry");
+                output = getContext().getContentResolver().openOutputStream(savedUri, "w");
+                if (output == null) throw new IllegalStateException("Could not open Downloads file");
+                try (OutputStream stream = output) {
+                    stream.write(bytes);
+                    stream.flush();
+                }
+                ContentValues complete = new ContentValues();
+                complete.put(MediaStore.Downloads.IS_PENDING, 0);
+                getContext().getContentResolver().update(savedUri, complete, null, null);
+            } else {
+                File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                if (!directory.exists() && !directory.mkdirs()) throw new IllegalStateException("Cannot create Downloads directory");
+                File target = new File(directory, fileName);
+                try (FileOutputStream stream = new FileOutputStream(target)) {
+                    stream.write(bytes);
+                    stream.flush();
+                    stream.getFD().sync();
+                }
+                savedUri = Uri.fromFile(target);
             }
-            DownloadManager manager = (DownloadManager) getContext().getSystemService(android.content.Context.DOWNLOAD_SERVICE);
-            if (manager == null) throw new IllegalStateException("Android DownloadManager unavailable");
-            DownloadManager.Request request = new DownloadManager.Request(Uri.fromFile(temp));
-            request.setTitle(fileName);
-            request.setDescription("تنزيل ملف من تطبيق سنابل");
-            request.setMimeType(mimeType);
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setAllowedOverMetered(true);
-            request.setAllowedOverRoaming(false);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-            long id = manager.enqueue(request);
             JSObject result = new JSObject();
-            result.put("id", id);
+            result.put("uri", savedUri.toString());
             result.put("fileName", fileName);
             result.put("location", "Download");
+            result.put("bytesWritten", bytes.length);
             call.resolve(result);
         } catch (Exception e) {
-            if (temp != null && temp.exists()) temp.delete();
-            call.reject("تعذر بدء حفظ الملف في مجلد Download", e);
+            if (savedUri != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try { getContext().getContentResolver().delete(savedUri, null, null); } catch (Exception ignored) {}
+            }
+            call.reject("تعذر حفظ الملف فعلياً داخل مجلد Download", e);
         }
     }
 }
