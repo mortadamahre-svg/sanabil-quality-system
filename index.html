@@ -64,8 +64,12 @@ select.hid{display:none}
 .bd{width:36px;height:36px;border-radius:13px;display:grid;place-items:center;background:var(--s1);color:var(--ac);font-style:normal;font-weight:700}.tile.on .bd{background:#ffffff30;color:#fff}
 .num{justify-content:center;aspect-ratio:1;border-radius:50%;padding:0;font-size:16px}.num.on{background:var(--ac);color:#fff;box-shadow:0 4px 0 var(--ac2)}
 details ol{padding-inline-start:58px;margin-inline-end:0}details ol li{padding:3px 0}
+#bell{margin-inline-start:auto;position:relative;border:0;width:48px;height:48px;border-radius:17px;background:#ffffff2e;color:#fff;box-shadow:0 4px 0 #0003;cursor:pointer;display:grid;place-items:center}#bell:active{transform:translateY(4px);box-shadow:none}
+#bell svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#bellN{position:absolute;top:-6px;left:-6px;min-width:22px;height:22px;padding:0 5px;border-radius:99px;background:var(--hot);color:#fff;font:700 12px/22px 'Rubik',sans-serif;font-style:normal;text-align:center;box-shadow:0 0 0 3px #3a2ad6}#bellN[hidden]{display:none}
+.er{background:var(--s2);border-radius:18px;padding:12px 14px;margin-bottom:10px}.er b{display:block;font-size:14px;word-break:break-word}.er small{display:block;color:var(--mu);margin-top:2px}.er code{display:block;direction:ltr;text-align:left;font-size:11px;margin-top:6px;color:var(--no);word-break:break-all}.er a{color:var(--ac);font-weight:600;font-size:13px}
 </style></head><body>
-<header><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3YTZiZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyYTFmYTgiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0idyIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZTA4YSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q5OWExZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNiKSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI3MCIgcj0iMTkwIiBmaWxsPSIjZjJjMTRlIiBvcGFjaXR5PSIuMDciLz4KPHBhdGggZD0iTTI1NiAxNTBWNDIwIiBzdHJva2U9IiNkOTlhMWUiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxlbGxpcHNlIGN4PSIyMjIiIGN5PSIzMDAiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggMjIyIDMwMCkiLz48ZWxsaXBzZSBjeD0iMjkwIiBjeT0iMzAwIiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoMzggMjkwIDMwMCkiLz48ZWxsaXBzZSBjeD0iMjIyIiBjeT0iMjYyIiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoLTM4IDIyMiAyNjIpIi8+PGVsbGlwc2UgY3g9IjI5MCIgY3k9IjI2MiIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKDM4IDI5MCAyNjIpIi8+PGVsbGlwc2UgY3g9IjIyMiIgY3k9IjIyNCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKC0zOCAyMjIgMjI0KSIvPjxlbGxpcHNlIGN4PSIyOTAiIGN5PSIyMjQiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgzOCAyOTAgMjI0KSIvPjxlbGxpcHNlIGN4PSIyMjIiIGN5PSIxODYiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggMjIyIDE4NikiLz48ZWxsaXBzZSBjeD0iMjkwIiBjeT0iMTg2IiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoMzggMjkwIDE4NikiLz48ZWxsaXBzZSBjeD0iMjIyIiBjeT0iMTQ4IiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoLTM4IDIyMiAxNDgpIi8+PGVsbGlwc2UgY3g9IjI5MCIgY3k9IjE0OCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKDM4IDI5MCAxNDgpIi8+PGVsbGlwc2UgY3g9IjIyMiIgY3k9IjExMCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKC0zOCAyMjIgMTEwKSIvPjxlbGxpcHNlIGN4PSIyOTAiIGN5PSIxMTAiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgzOCAyOTAgMTEwKSIvPjxlbGxpcHNlIGN4PSIyNTYiIGN5PSIxMTgiIHJ4PSIxMyIgcnk9IjMyIiBmaWxsPSJ1cmwoI3cpIi8+CjxwYXRoIGQ9Ik0xMjAgNDQwcTEzNi00NCAyNzIgMHYxOEgxMjB6IiBmaWxsPSIjZjNlZmUzIiBvcGFjaXR5PSIuOTIiLz48cGF0aCBkPSJNMTUwIDQyNXExMDYtMjYgMjEyIDAiIHN0cm9rZT0iI2YzZWZlMyIgc3Ryb2tlLXdpZHRoPSI2IiBmaWxsPSJub25lIiBvcGFjaXR5PSIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+" alt=""><div><b>سنابل</b><small>إدارة حصة الطحين الشهرية</small></div></header>
+<header><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3YTZiZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyYTFmYTgiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0idyIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZTA4YSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q5OWExZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0idXJsKCNiKSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI3MCIgcj0iMTkwIiBmaWxsPSIjZjJjMTRlIiBvcGFjaXR5PSIuMDciLz4KPHBhdGggZD0iTTI1NiAxNTBWNDIwIiBzdHJva2U9IiNkOTlhMWUiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxlbGxpcHNlIGN4PSIyMjIiIGN5PSIzMDAiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggMjIyIDMwMCkiLz48ZWxsaXBzZSBjeD0iMjkwIiBjeT0iMzAwIiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoMzggMjkwIDMwMCkiLz48ZWxsaXBzZSBjeD0iMjIyIiBjeT0iMjYyIiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoLTM4IDIyMiAyNjIpIi8+PGVsbGlwc2UgY3g9IjI5MCIgY3k9IjI2MiIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKDM4IDI5MCAyNjIpIi8+PGVsbGlwc2UgY3g9IjIyMiIgY3k9IjIyNCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKC0zOCAyMjIgMjI0KSIvPjxlbGxpcHNlIGN4PSIyOTAiIGN5PSIyMjQiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgzOCAyOTAgMjI0KSIvPjxlbGxpcHNlIGN4PSIyMjIiIGN5PSIxODYiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggMjIyIDE4NikiLz48ZWxsaXBzZSBjeD0iMjkwIiBjeT0iMTg2IiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoMzggMjkwIDE4NikiLz48ZWxsaXBzZSBjeD0iMjIyIiBjeT0iMTQ4IiByeD0iMTMiIHJ5PSIzMCIgZmlsbD0idXJsKCN3KSIgdHJhbnNmb3JtPSJyb3RhdGUoLTM4IDIyMiAxNDgpIi8+PGVsbGlwc2UgY3g9IjI5MCIgY3k9IjE0OCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKDM4IDI5MCAxNDgpIi8+PGVsbGlwc2UgY3g9IjIyMiIgY3k9IjExMCIgcng9IjEzIiByeT0iMzAiIGZpbGw9InVybCgjdykiIHRyYW5zZm9ybT0icm90YXRlKC0zOCAyMjIgMTEwKSIvPjxlbGxpcHNlIGN4PSIyOTAiIGN5PSIxMTAiIHJ4PSIxMyIgcnk9IjMwIiBmaWxsPSJ1cmwoI3cpIiB0cmFuc2Zvcm09InJvdGF0ZSgzOCAyOTAgMTEwKSIvPjxlbGxpcHNlIGN4PSIyNTYiIGN5PSIxMTgiIHJ4PSIxMyIgcnk9IjMyIiBmaWxsPSJ1cmwoI3cpIi8+CjxwYXRoIGQ9Ik0xMjAgNDQwcTEzNi00NCAyNzIgMHYxOEgxMjB6IiBmaWxsPSIjZjNlZmUzIiBvcGFjaXR5PSIuOTIiLz48cGF0aCBkPSJNMTUwIDQyNXExMDYtMjYgMjEyIDAiIHN0cm9rZT0iI2YzZWZlMyIgc3Ryb2tlLXdpZHRoPSI2IiBmaWxsPSJub25lIiBvcGFjaXR5PSIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+" alt=""><div><b>سنابل</b><small>إدارة حصة الطحين الشهرية</small></div><button id="bell" aria-label="الأخطاء"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg><i id="bellN" hidden>0</i></button></header>
 <main>
 <section id="p-home" class="page"><h1>عائلة جديدة</h1>
 <div class="panel"><label>اسم رب الأسرة<input id="hName" autocomplete="off"></label>
@@ -101,6 +105,7 @@ details ol{padding-inline-start:58px;margin-inline-end:0}details ol li{padding:3
 <div class="two"><button class="btn ghost" id="shSync">مزامنة كل البيانات الآن</button><button class="btn ghost" id="shRest">استعادة من Google Sheets</button></div></div>
 <div class="panel"><h2>إشعارات Telegram</h2><p class="muted">أدخل رمز البوت الجديد بعد إلغاء القديم من BotFather. يُحفظ على هذا الجهاز فقط ولا يُرسل إلى Google Sheets ولا يدخل النسخ الاحتياطية.</p>
 <label>رمز البوت<input id="tgTok" dir="ltr" type="password" autocomplete="off"></label><button class="btn" id="tgSave">حفظ الرمز</button></div>
+<div class="panel"><h2>مراقبة الأخطاء (Sentry)</h2><p class="muted">أدخل رابط DSN الخاص بمشروعك في Sentry. تُرسل تفاصيل الخطأ التقنية فقط، دون أسماء عوائل أو بيانات. لعرض أخطاء Sentry داخل التطبيق أدخل اسم المنظمة والمشروع ورمز قراءة فقط (صلاحيتا project:read وevent:read). الرمز يُحفظ على هذا الجهاز فقط.</p><label>رابط DSN<input id="snDsn" dir="ltr" placeholder="https://…@…ingest.sentry.io/…"></label><label>المنظمة (org slug)<input id="snOrg" dir="ltr"></label><label>المشروع (project slug)<input id="snPrj" dir="ltr"></label><label>رمز القراءة (Auth Token)<input id="snTok" dir="ltr" type="password" autocomplete="off"></label><button class="btn ghost" id="snPull">جلب الأخطاء من Sentry الآن</button><div class="two"><button class="btn" id="snSave">حفظ</button><button class="btn ghost" id="snTest">خطأ تجريبي</button></div><p>الحالة: <span id="snSt" class="chip">—</span></p></div>
 <button class="btn ghost" id="theme">تبديل المظهر (داكن / فاتح)</button></section>
 </main>
 <nav><i class="ind"></i>
@@ -109,9 +114,7 @@ details ol{padding-inline-start:58px;margin-inline-end:0}details ol li{padding:3
 <button data-p="dist"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8"/></svg><span>التوزيع</span></button>
 <button data-p="stats"><svg viewBox="0 0 24 24"><path d="M4 20V11M10 20V4M16 20v-7M22 20H2"/></svg><span>الإحصائيات</span></button>
 <button data-p="set"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M16 5v4M8 15v4"/></svg><span>الإعدادات</span></button>
-</nav><div id="modal"></div><div id="toast"></div><script src="sentry-init.js"></script>
-<script src="https://js.sentry-cdn.com/04840aef61b2c3c27289909e1d91fd38.min.js" crossorigin="anonymous"></script>
-<script>'use strict';
+</nav><div id="modal"></div><div id="toast"></div><script>'use strict';
 let LS;try{localStorage.setItem('_t','1');LS=localStorage}catch(e){const m={};LS={fake:1,getItem:k=>m[k]??null,setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const K='sanabil_db',TK='sanabil_tg_token';
@@ -224,13 +227,13 @@ async function make(f){const X=exInfo(),{items,title}=X;let blob;
   blob=await Packer.toBlob(new Document({sections:[{children:[P(title,1,32),new Table({visuallyRightToLeft:true,width:{size:100,type:WidthType.PERCENTAGE},rows:[R('#','اسم رب الأسرة','عدد الأفراد',1),...items.map((x,i)=>R(i+1,x.name,x.members))]})]}]}))}
  else{await loadJs('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js');const d=document.createElement('div');d.innerHTML=`<style>${X.css}</style>`+X.body;d.dir='rtl';d.style.cssText='font-family:Tahoma,Arial;color:#000;background:#fff;padding:10px;width:700px';blob=await html2pdf().set({margin:12,html2canvas:{scale:2},pagebreak:{mode:['css','legacy']}}).from(d).outputPdf('blob')}
  return{blob,name:`${X.name}.${f}`}}
-const run=async fn=>{toast('جارٍ تجهيز الملف…');try{await fn(await make($('#xF').value))}catch(e){if(e.name!=='AbortError')toast('تعذّر إنشاء الملف (تحقق من الاتصال)')}};
+const run=async fn=>{toast('جارٍ تجهيز الملف…');try{await fn(await make($('#xF').value))}catch(e){if(e.name!=='AbortError'){report(e);toast('تعذّر إنشاء الملف (تحقق من الاتصال)')}}};
 $('#xDl').onclick=()=>run(o=>{dl(o.name,o.blob);toast('تم التنزيل ✓')});
 $('#xSh').onclick=()=>run(async o=>{const file=new File([o.blob],o.name,{type:o.blob.type});if(navigator.canShare?.({files:[file]}))await navigator.share({files:[file]});else{dl(o.name,o.blob);toast('المشاركة غير مدعومة، تم التنزيل')}});
 $('#xPr').onclick=()=>{const w=open('','_blank');if(!w)return toast('اسمح بالنوافذ المنبثقة');w.document.write(exInfo().html);w.document.close();setTimeout(()=>w.print(),500)};
 
 /* ---------- settings ---------- */
-function renderSet(){$('#shUrl').value=DB.settings.sheetUrl||'';$('#tgTok').placeholder=LS.getItem(TK)?'••••• محفوظ على الجهاز':'';ping()}
+function renderSet(){setSn();$('#shUrl').value=DB.settings.sheetUrl||'';$('#tgTok').placeholder=LS.getItem(TK)?'••••• محفوظ على الجهاز':'';ping()}
 async function ping(){const s=$('#shSt'),u=DB.settings.sheetUrl;if(!u){s.textContent='غير جاهز';s.className='chip bad';return}
  try{const r=await fetch(u+(u.includes('?')?'&':'?')+'action=ping');s.textContent=r.ok?'جاهز':'غير جاهز';s.className='chip '+(r.ok?'ready':'bad')}catch{s.textContent='غير جاهز';s.className='chip bad'}}
 $('#shSave').onclick=()=>{DB.settings.sheetUrl=$('#shUrl').value.trim();save();ping();toast('تم حفظ الرابط')};
@@ -254,9 +257,41 @@ function openPick(s){const id=s.id,yr=id==='dY'||id==='sY',mo=id==='dM'||id==='s
   return `<button type="button" class="po${yr||mo?' tile':''}${nm?' num':''}${o.selected?' on':''}" style="--k:${i}" data-i="${i}">${h}</button>`};
  ov.innerHTML=`<div class="sheet"><div class="ph"><i class="tl">${svg(IC[yr||mo?'cal':nm?'hash':'doc'])}</i><h3>${TT[id]||''}</h3></div><div class="${yr||mo?'g3':nm?'g5':'pl'}">${[...s.options].map(item).join('')}</div></div>`;
  document.body.appendChild(ov);ov.onclick=e=>{const b=e.target.closest('.po');if(b){s.selectedIndex=+b.dataset.i;s.dispatchEvent(new Event('change'));sync1(s)}if(b||e.target===ov)ov.remove()}}
+/* ---------- Sentry (error monitoring, no personal data) ---------- */
+const VER='__VERSION__',DSK='sanabil_dsn';
+function setSn(){const s=$('#snSt');if(!s)return;$('#snOrg').value=LS.getItem('sanabil_sn_org')||'';$('#snPrj').value=LS.getItem('sanabil_sn_prj')||'';const ok=!!(window.Sentry&&Sentry.getClient&&Sentry.getClient());s.textContent=ok?'مفعّل':LS.getItem(DSK)?'غير جاهز':'غير مفعّل';s.className='chip '+(ok?'ready':'bad')}
+function initSentry(){const d=LS.getItem(DSK);if(!d)return setSn();
+ loadJs('https://browser.sentry-cdn.com/8.40.0/bundle.min.js').then(()=>{Sentry.init({dsn:d,release:'sanabil@'+VER,environment:location.hostname.endsWith('github.io')?'production':'development',sendDefaultPii:false,tracesSampleRate:0,
+  beforeBreadcrumb:b=>['ui.click','ui.input','console','fetch','xhr'].includes(b.category)?null:b,beforeSend:e=>{delete e.request;delete e.user;return e}});setSn()}).catch(setSn)}
+$('#snTest').onclick=()=>{if(!window.Sentry)return toast('Sentry غير مفعّل بعد');report(new Error('اختبار Sentry من سنابل'));toast('أُرسل خطأ تجريبي، تحقق من لوحة Sentry')};
+/* ---------- in-app error center (+ pull issues from Sentry) ---------- */
+const EK='sanabil_errlog',SK='sanabil_sn_seen';let SNI=[];
+const errs=()=>{try{return JSON.parse(LS.getItem(EK)||'[]')}catch{return[]}},seen=()=>{try{return JSON.parse(LS.getItem(SK)||'[]')}catch{return[]}};
+function bell(){const u=errs().filter(x=>!x.u).length+SNI.filter(i=>!seen().includes(i.id)).length,b=$('#bellN');b.textContent=u;b.hidden=!u}
+function logErr(e,src){const m=String(e&&e.message||e||'خطأ غير معروف').slice(0,300),st=String(e&&e.stack||'').split('\n').slice(0,4).join(' | ').slice(0,400),l=errs();
+ if(l[0]&&l[0].m===m&&Date.now()-l[0].t<3000)return;l.unshift({t:Date.now(),m,st,src:src||'app',v:VER,u:0});LS.setItem(EK,JSON.stringify(l.slice(0,50)));bell();toast('⚠️ حدث خطأ — اضغط على الجرس لعرضه')}
+const report=(e,src)=>{logErr(e,src);try{window.Sentry&&Sentry.captureException(e)}catch{}};
+addEventListener('error',ev=>logErr(ev.error||ev.message,'window'));addEventListener('unhandledrejection',ev=>logErr(ev.reason,'promise'));
+const D=t=>new Date(t).toLocaleString('ar-IQ',{dateStyle:'short',timeStyle:'short'});
+function showErr(){const l=errs();
+ modal(`<h3>مركز الأخطاء</h3>${l.length?l.map(x=>`<div class="er"><b>${esc(x.m)}</b><small>${D(x.t)} · ${esc(x.src)} · v${esc(x.v)}</small>${x.st?`<code>${esc(x.st)}</code>`:''}</div>`).join(''):'<p class="muted">لا توجد أخطاء مسجّلة 🎉</p>'}
+ ${SNI.length?'<h3>من Sentry</h3>'+SNI.map(i=>`<div class="er"><b>${esc(i.title)}</b><small>${esc(i.level)} · ${i.count} مرة · آخر ظهور ${D(i.lastSeen)}</small><a href="${esc(i.permalink)}" target="_blank" rel="noopener">فتح في Sentry</a></div>`).join(''):''}
+ <div class="row"><button class="btn" id="erC">نسخ التقرير</button><button class="btn ghost" id="erX">مسح الكل</button></div>`);
+ const txt=l.map(x=>`${new Date(x.t).toISOString()} [${x.src}] v${x.v}: ${x.m}\n${x.st}`).join('\n\n')+SNI.map(i=>`\n[Sentry] ${i.title} (${i.count}x) ${i.permalink}`).join('');
+ $('#erC').onclick=()=>(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('تم نسخ التقرير'),()=>toast('تعذّر النسخ'));
+ $('#erX').onclick=()=>{LS.setItem(EK,'[]');LS.setItem(SK,JSON.stringify(SNI.map(i=>i.id)));closeM();bell()};
+ LS.setItem(EK,JSON.stringify(l.map(x=>({...x,u:1}))));LS.setItem(SK,JSON.stringify(SNI.map(i=>i.id)));bell()}
+$('#bell').onclick=showErr;
+async function pullSentry(manual){const o=LS.getItem('sanabil_sn_org'),p=LS.getItem('sanabil_sn_prj'),t=LS.getItem('sanabil_sn_tok');if(!o||!p||!t)return manual&&toast('أدخل المنظمة والمشروع والرمز أولاً');
+ try{const r=await fetch(`https://sentry.io/api/0/projects/${encodeURIComponent(o)}/${encodeURIComponent(p)}/issues/?query=is%3Aunresolved&limit=25`,{headers:{Authorization:'Bearer '+t}});if(!r.ok)throw new Error('HTTP '+r.status);
+  SNI=(await r.json()).map(i=>({id:i.id,title:i.title,level:i.level,count:i.count,lastSeen:i.lastSeen,permalink:i.permalink}));bell();
+  if(manual)toast(`تم جلب ${SNI.length} مشكلة من Sentry`);else if(SNI.some(i=>!seen().includes(i.id)))toast('⚠️ مشكلة جديدة في Sentry — اضغط على الجرس')}catch(e){if(manual)toast('تعذّر الجلب من Sentry: '+e.message)}}
+setInterval(()=>pullSentry(),300000);
+$('#snSave').onclick=()=>{[['snDsn',DSK],['snOrg','sanabil_sn_org'],['snPrj','sanabil_sn_prj'],['snTok','sanabil_sn_tok']].forEach(([i,k])=>{const v=$('#'+i).value.trim();if(v)LS.setItem(k,v);if(i==='snDsn'||i==='snTok')$('#'+i).value=''});initSentry();bell();pullSentry();pullSentry(1);toast('تم الحفظ')};
+$('#snPull').onclick=()=>pullSentry(1);
 const applyTheme=()=>document.documentElement.dataset.theme=DB.settings.theme||'light';
 $('#theme').onclick=()=>{DB.settings.theme=DB.settings.theme==='light'?'dark':'light';save();applyTheme()};
-applyTheme();go('home');flush();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+applyTheme();go('home');flush();initSentry();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 if(LS.fake)setTimeout(()=>toast('تنبيه: الحفظ غير متاح خارج الاستضافة — ارفع التطبيق على GitHub Pages'),800);
 </script></body></html>
