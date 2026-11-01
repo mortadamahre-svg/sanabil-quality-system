@@ -1,33 +1,59 @@
 name: Quality Assurance
 on:
   push:
-    branches: [main]
+    branches: [main, "qa/**"]
   pull_request:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
-  security-events: write
-  actions: read
 concurrency:
   group: qa-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  checks:
-    name: Static checks and regression tests
+  quality:
+    name: Static checks, unit tests and production build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check application JavaScript syntax when source is present
-        run: |
-          if [ -f src/app.js ]; then node --check src/app.js; else echo "App source not uploaded yet; application syntax check skipped."; fi
-          node qa/static-checks.cjs
-      - name: Validate production build and local assets
-        run: npm run build
-      - name: Run regression tests
-        run: npm test
-      - name: Check whitespace and patch errors
+      - name: Install dependencies
+        run: npm install
+      - name: Verify application
+        run: npm run verify
+      - name: Check patch formatting
         run: git diff --check
+      - name: Upload production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: sanabil-web-build
+          path: dist/
+          if-no-files-found: error
+  browser:
+    name: Playwright browser regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Build app
+        run: npm run build
+      - name: Run end-to-end tests
+        run: npm run e2e
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure
+          path: e2e-fail.png
+          if-no-files-found: ignore

@@ -1,0 +1,17 @@
+import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
+const el=()=>new Proxy(function(){},{get:(t,k)=>k===Symbol.toPrimitive?()=>'':k==='classList'?{add(){},remove(){},toggle(){}}:k==='style'?{setProperty(){}}:k==='dataset'?{}:k==='selectedOptions'?[{text:'',value:''}]:k==='options'?[]:el(),set:()=>true,apply:()=>el()});
+const store={};const ctx=vm.createContext({document:{querySelector:()=>el(),querySelectorAll:()=>[],documentElement:el(),createElement:()=>el(),head:el(),body:el()},
+ localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=String(v)}},window:{},location:{hostname:''},navigator:{},addEventListener(){},setInterval(){},setTimeout(){},clearTimeout(){},scrollTo(){},console});
+vm.runInContext((readFileSync('index.html','utf8').match(/<script>([\s\S]*?)<\/script>/)[1]),ctx);const run=c=>vm.runInContext(c,ctx);
+test('تفصيل الحصة بالأكياس',()=>{assert.equal(run('taf(90)'),'1 كيس و 40 كغم');assert.equal(run('taf(36)'),'0 كيس و 36 كغم');assert.equal(run('taf(50)'),'1 كيس و 0 كغم')});
+test('حالات الاستلام: كامل / جزئي / لا شيء',()=>{
+ run(`DB.dist={'2026-10':{recs:{a:{bag:1},b:{bag:1,extra:1},c:{extra:1}}}}`);
+ const s=run(`JSON.stringify([[90,'a'],[90,'b'],[36,'c'],[90,'d']].map(([f,id])=>calc({id,flour:f,amount:f*250/9},'2026-10').s))`);
+ assert.equal(s,'["part","full","full","none"]')});
+test('المبلغ المستلم يتناسب مع الكمية',()=>{assert.equal(run(`calc({id:'a',flour:90,amount:2500},'2026-10').money`),1389);assert.equal(run(`calc({id:'z',flour:0,amount:0},'2026-10').money`),0)});
+test('تطبيع البحث العربي',()=>{assert.ok(run(`norm('أحمد')===norm('احمد')`));assert.ok(run(`norm('فاطمة')===norm('فاطمه')`));assert.ok(run(`norm('عَلِي')===norm('علي')`))});
+test('ترتيب رقم الصفحة',()=>{assert.equal(run(`pn({page:'12'})`),12);assert.equal(run(`pn({page:'ص 7'})`),7);assert.ok(run(`pn({page:''})`)>1e8)});
+test('حماية من حقن HTML',()=>{assert.ok(!run(`esc('<img onerror=x>"')`).includes('<'))});
+test('تنسيق الأرقام',()=>{assert.equal(run('n(1245)'),'1,245');assert.equal(run('n()'),'0')});
+test('مركز الأخطاء يسجل ولا يكرر',()=>{run("LS.setItem('sanabil_errlog','[]');logErr(new Error('x1'),'t');logErr(new Error('x1'),'t')");assert.equal(run('errs().length'),1);assert.equal(run('errs()[0].m'),'x1');assert.equal(run('errs()[0].u'),0)});
+test('الخطأ يُحسب كغير مقروء ثم يُصفّر عند العرض',()=>{assert.equal(run('errs().filter(x=>!x.u).length'),1)});
