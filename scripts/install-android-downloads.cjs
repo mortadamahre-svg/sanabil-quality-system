@@ -53,7 +53,7 @@ public class SanabilDownloadsPlugin extends Plugin {
         try {
             byte[] bytes = Base64.decode(encoded, Base64.DEFAULT);
             ContentValues values = new ContentValues();
-            values.put(MediaStore.MediaColumns.DISPLAY_NAME, name.replaceAll("[\\\\/:*?\\"<>|]", "_"));
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
             values.put(MediaStore.MediaColumns.MIME_TYPE, mime);
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Sanabil");
             values.put(MediaStore.MediaColumns.IS_PENDING, 1);
