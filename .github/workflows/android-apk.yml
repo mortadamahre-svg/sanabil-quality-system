@@ -56,7 +56,7 @@ jobs:
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           file android/app/build/outputs/apk/debug/app-debug.apk
       - name: Upload installable APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Sanabil-Android-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
